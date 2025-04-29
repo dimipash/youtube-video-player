@@ -25,18 +25,7 @@ export default function Home() {
                     </li>
                 </ol>
 
-                <div className="flex gap-4 items-center flex-col sm:flex-row">
-                    <iframe
-                        width="560"
-                        height="315"
-                        src="https://www.youtube.com/embed/8xUher8-5_Q?si=S72Vk2opBJGihnXR"
-                        title="YouTube video player"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allowfullscreen
-                    ></iframe>
-                </div>
+                <div className="flex gap-4 items-center flex-col sm:flex-row"></div>
             </main>
             <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
                 <a
