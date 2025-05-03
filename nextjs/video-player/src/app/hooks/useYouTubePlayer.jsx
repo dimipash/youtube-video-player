@@ -5,7 +5,12 @@ function getKeyByValue(object, value) {
     return Object.keys(object).find((key) => object[key] === value);
 }
 
-const useYouTubePlayer = (videoId, elementId) => {
+const useYouTubePlayer = (
+    videoId,
+    elementId,
+    startTime = 200,
+    interval = 5000
+) => {
     const playerElementId = elementId || "video-player";
     const playerRef = useRef(null);
     const [playerState, setPlayerState] = useState({
@@ -31,6 +36,7 @@ const useYouTubePlayer = (videoId, elementId) => {
                 videoId: videoId,
                 playerVars: {
                     playsinline: 1,
+                    start: startTime,
                 },
                 events: {
                     onReady: handleOnReady,
@@ -43,6 +49,16 @@ const useYouTubePlayer = (videoId, elementId) => {
             );
         };
     }, [videoId]);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            console.log("triggering change")
+            handleOnStateChange();
+        }, interval);
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
 
     const handleOnReady = useCallback((event) => {
         setPlayerState((prevState) => ({ ...prevState, isReady: true }));
@@ -60,10 +76,9 @@ const useYouTubePlayer = (videoId, elementId) => {
             videoStateValue
         );
 
-        console.log(videoData, currentTime, videoStateLabel, videoStateValue);
         setPlayerState((prevState) => ({
             ...prevState,
-            videoData: {title: videoData.title},
+            videoData: { title: videoData.title },
             currentTime: currentTime,
             videoStateLabel: videoStateLabel,
             videoStateValue: videoStateValue,
