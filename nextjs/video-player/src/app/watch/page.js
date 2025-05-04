@@ -1,5 +1,5 @@
 "use client";
-import useYouTubePlayer from "../hooks/useYouTubePlayer";
+import useYouTubePlayer from "../../hooks/useYouTubePlayer";
 import { useSearchParams } from "next/navigation";
 
 export default function WatchPage() {
