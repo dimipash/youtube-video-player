@@ -1,15 +1,52 @@
 "use client";
 import useYouTubePlayer from "../../hooks/useYouTubePlayer";
 import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect } from "react";
+
+const TEMP_API_ENDPOINT = "http://localhost:8000/api/watch-events/";
 
 export default function WatchPage() {
     const searchParams = useSearchParams();
     const { v: video_id, t: startTime } = Object.fromEntries(searchParams);
     const playerElementId = "youtube-player";
-    const playerState = useYouTubePlayer(video_id, playerElementId, startTime);
+    const playerState = useYouTubePlayer(
+        video_id,
+        playerElementId,
+        startTime,
+        1500
+    );
 
     const url = `https://www.youtube.com/embed/${video_id}`;
-    console.log("playerState", playerState);
+
+    const updateBackend = useCallback(
+        async (currentPlayerState) => {
+            const headers = { "Content-Type": "application/json" };
+            console.log(video_id, currentPlayerState);
+
+            try {
+                const response = await fetch(TEMP_API_ENDPOINT, {
+                    method: "POST",
+                    headers: headers,
+                    body: JSON.stringify({
+                        ...currentPlayerState,
+                        video_id: video_id,
+                    }),
+                });
+                if (!response.ok) {
+                    console.log("Error adding data the backend");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        [video_id]
+    );
+
+    useEffect(() => {
+        if (!playerState.isReady) return;
+        updateBackend(playerState);
+    }, [playerState]);
+
     return (
         <>
             <div className="w-[50vw] mx-auto h-full px-5">
