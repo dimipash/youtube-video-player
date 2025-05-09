@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# YouTube Video Player (Next.js)
+
+This project is a YouTube video player built with Next.js. It allows users to input a YouTube video URL and watch the video directly within the application.
+
+## Features
+
+*   **Play YouTube Videos**: Enter a YouTube video URL to play the video.
+*   **Responsive Design**: The player should adapt to different screen sizes (Work in Progress).
+*   **Custom Player Controls**: (Planned)
+*   **Playlist Support**: (Planned)
+
+## Technologies Used
+
+*   **Next.js (v15.3.1)**: React framework for server-side rendering and static site generation.
+*   **React (v19.0.0)**: JavaScript library for building user interfaces.
+*   **Tailwind CSS (v4)**: A utility-first CSS framework.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+*   Node.js (v18.x or later recommended)
+*   npm or yarn
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone <repository-url>
+    ```
+2.  Navigate to the project directory:
+    ```bash
+    cd nextjs/video-player
+    ```
+3.  Install dependencies:
+    ```bash
+    npm install
+    # or
+    # yarn install
+    ```
+
+### Running the Development Server
+
+1.  Start the development server:
+    ```bash
+    npm run dev
+    # or
+    # yarn dev
+    ```
+2.  Open your browser and navigate to `http://localhost:3000`.
+
+## Project Structure
+
+```
+.
+├── public/                 # Static assets
+├── src/
+│   ├── app/                # Next.js App Router
+│   │   ├── watch/          # Watch page
+│   │   │   └── page.js     # Logic for the watch page
+│   │   ├── layout.js       # Root layout
+│   │   └── page.js         # Home page
+│   ├── components/         # Reusable React components
+│   │   └── YouTubeURLForm.jsx # Component for YouTube URL input
+│   ├── hooks/              # Custom React hooks
+│   │   └── useYouTubePlayer.jsx # Hook for YouTube player logic
+│   └── lib/                # Utility functions
+│       └── extractYouTubeInfo.js # Function to extract video ID
+├── .gitignore
+├── next.config.mjs         # Next.js configuration
+├── package.json
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Future Enhancements
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*   Improved error handling for invalid YouTube URLs.
+*   Customizable player appearance.
+*   Saving video history.
+*   User authentication and personalized playlists.

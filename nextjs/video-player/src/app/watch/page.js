@@ -44,6 +44,7 @@ export default function WatchPage() {
 
     useEffect(() => {
         if (!playerState.isReady) return;
+        if (playerState.videoStateLabel === "CUED") return;
         updateBackend(playerState);
     }, [playerState]);
 
