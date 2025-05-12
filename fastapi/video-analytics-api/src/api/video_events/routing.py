@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 router = APIRouter()
 
@@ -10,14 +10,17 @@ class YouTubeVideoData(BaseModel):
 
 class YouTubePlayerState(BaseModel):
     isReady: bool
+    video_id: str
     videoData: YouTubeVideoData
-    currentTime: int
+    currentTime: float | int
     videoStateLabel: str
-    videoStateValue: int
+    videoStateValue: float | int
 
 
 @router.post("/")  # /api/video-events/
-def create_video_event(payload: YouTubePlayerState):
+def create_video_event(request: Request, payload: YouTubePlayerState):
+    headers = request.headers
+    referer = headers.get("referer")    
     data = payload.model_dump()
-    print(payload)
-    return payload
+    print(data, referer)
+    return data

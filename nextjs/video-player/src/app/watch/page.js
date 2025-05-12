@@ -33,6 +33,7 @@ export default function WatchPage() {
                     }),
                 });
                 if (!response.ok) {
+                    console.log(await response.text())
                     console.log("Error adding data the backend");
                 }
             } catch (error) {
