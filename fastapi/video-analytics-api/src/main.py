@@ -7,12 +7,19 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .api.video_events.routing import router as video_events_router
 
+host_origin = ""
+host_origin_portless = ""
 
 
-origins = [
-    "http://localhost:3000",
-    "http://localhost",
-]
+HOST = os.environ.get("HOST")
+HOST_SCHEME = os.environ.get("HOST_SCHEME")
+HOST_PORT = os.environ.get("HOST_PORT")
+
+if all([HOST, HOST_SCHEME, HOST_PORT]):
+    host_origin = f"{HOST_SCHEME}://{HOST}:{HOST_PORT}"
+    host_origin_portless = f"{HOST_SCHEME}://{HOST}"
+
+origins = [host_origin, host_origin_portless]
 
 
 @asynccontextmanager
