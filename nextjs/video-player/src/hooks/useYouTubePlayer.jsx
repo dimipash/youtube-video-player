@@ -14,13 +14,11 @@ const useYouTubePlayer = (
     const playerElementId = elementId || "video-player";
     const playerRef = useRef(null);
     const [playerState, setPlayerState] = useState({
-        isReady: false,
-        currentTime: 0,
-        videoData: {
-            title: "",
-        },
-        videoStateLabel: "",
-        videoStateValue: -10,
+        is_ready: false,
+        current_time: 0,
+        video_title: "",        
+        video_state_label: "",
+        video_state_value: -10,
     });
     useEffect(() => {
         var tag = document.createElement("script");
@@ -51,7 +49,7 @@ const useYouTubePlayer = (
     }, [videoId]);
 
     useEffect(() => {
-        const intervalId = setInterval(() => {            
+        const intervalId = setInterval(() => {
             handleOnStateChange();
         }, interval);
         return () => {
@@ -76,11 +74,11 @@ const useYouTubePlayer = (
         );
 
         setPlayerState((prevState) => ({
-            ...prevState,
-            videoData: { title: videoData.title },
-            currentTime: currentTime,
-            videoStateLabel: videoStateLabel,
-            videoStateValue: videoStateValue,
+            ...prevState,            
+            video_title: videoData.title,
+            current_time: currentTime,
+            video_state_label: videoStateLabel,
+            video_state_value: videoStateValue,
         }));
     }, []);
 
