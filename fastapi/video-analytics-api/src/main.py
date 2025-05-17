@@ -1,13 +1,14 @@
+import os
 from contextlib import asynccontextmanager
 from typing import Union
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.db.session import init_db
+from src.api.db.session import init_db
 
 
-from .api.video_events.routing import router as video_events_router
+from src.api.video_events.routing import router as video_events_router
 
 host_origin = ""
 host_origin_portless = ""

@@ -33,8 +33,11 @@ export default function WatchPage() {
                     }),
                 });
                 if (!response.ok) {
-                    console.log(await response.text())
+                    console.log(await response.text());
                     console.log("Error adding data the backend");
+                } else {
+                    const responseData = await response.json();
+                    console.log("db data is", responseData);
                 }
             } catch (error) {
                 console.log(error);

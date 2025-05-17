@@ -1,12 +1,10 @@
-import os
 import sqlmodel
 import timescaledb
 from sqlmodel import SQLModel, Session
+from decouple import config
 
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if DATABASE_URL == "":
-    raise NotImplementedError("DATABASE_URL needs to be set")
+DATABASE_URL = config("DATABASE_URL")
 
 engine = sqlmodel.create_engine(DATABASE_URL)
 
