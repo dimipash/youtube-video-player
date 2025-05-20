@@ -1,23 +1,23 @@
 from fastapi import APIRouter, Request, Depends
 from sqlmodel import Session
 from api.db.session import get_session
-from .models import YouTubePlayerState, YouTubeWatchEvent, YouTubeWatchEventResponseModel
+from .models import WatchSession, WatchSessionCreate
 
 
 router = APIRouter()
 
 
-@router.post("/", response_model=YouTubeWatchEventResponseModel)  # /api/video-events/
-def create_video_event(
+@router.post("/", response_model=WatchSession)  # /api/video-events/
+def create_watch_session(
     request: Request,
-    payload: YouTubePlayerState,
+    payload: WatchSessionCreate,
     db_session: Session = Depends(get_session),
 ):
     headers = request.headers
     referer = headers.get("referer")
     data = payload.model_dump()
     # data["referer"] = referer
-    obj = YouTubeWatchEvent(**data)
+    obj = WatchSession(**data)
     obj.referer = referer
     db_session.add(obj)
     db_session.commit()

@@ -14,7 +14,6 @@ def init_db():
     # create database times
     print("creating db")
     SQLModel.metadata.create_all(engine)
-    timescaledb.metadata.create_all(engine)
 
 
 def get_session():
