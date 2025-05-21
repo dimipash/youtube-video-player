@@ -63,9 +63,10 @@ This project is a YouTube video player built with Next.js. It allows users to in
 │   ├── components/         # Reusable React components
 │   │   └── YouTubeURLForm.jsx # Component for YouTube URL input
 │   ├── hooks/              # Custom React hooks
-│   │   └── useYouTubePlayer.jsx # Hook for YouTube player logic
+│   │   ├── useWatchSession.jsx # Manages state for the current watching session
+│   │   └── useYouTubePlayer.jsx # Hook for YouTube player logic and control
 │   └── lib/                # Utility functions
-│       └── extractYouTubeInfo.js # Function to extract video ID
+│       └── extractYouTubeInfo.js # Function to extract video ID from URL
 ├── .gitignore
 ├── next.config.mjs         # Next.js configuration
 ├── package.json
