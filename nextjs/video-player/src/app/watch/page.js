@@ -8,6 +8,8 @@ const FASTAPI_ENDPOINT = "http://localhost:8000/api/video-events/";
 export default function WatchPage() {
     const searchParams = useSearchParams();
     const { v: video_id, t: startTime } = Object.fromEntries(searchParams);
+    const sessionId = useWatchSession(video_id);
+    console.log('session id is', sessionId);
     const playerElementId = "youtube-player";
     const playerState = useYouTubePlayer(
         video_id,
