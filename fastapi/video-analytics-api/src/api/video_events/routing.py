@@ -14,11 +14,14 @@ def create_video_event(
     db_session: Session = Depends(get_session),
 ):
     headers = request.headers
+    session_id = headers.get("x-session-id")
+    print(session_id)
     referer = headers.get("referer")
     data = payload.model_dump()
     # data["referer"] = referer
     obj = YouTubeWatchEvent(**data)
     obj.referer = referer
+    obj.watch_session_id = session_id
     db_session.add(obj)
     db_session.commit()
     db_session.refresh(obj)
