@@ -1,7 +1,13 @@
 from fastapi import APIRouter, Request, Depends
-from sqlmodel import Session
+from sqlmodel import Session, select
+from timescaledb.utils import get_utc_now
 from api.db.session import get_session
-from .models import YouTubePlayerState, YouTubeWatchEvent, YouTubeWatchEventResponseModel
+from api.watch_sessions.models import WatchSession
+from .models import (
+    YouTubePlayerState,
+    YouTubeWatchEvent,
+    YouTubeWatchEventResponseModel,
+)
 
 
 router = APIRouter()
@@ -14,14 +20,23 @@ def create_video_event(
     db_session: Session = Depends(get_session),
 ):
     headers = request.headers
-    session_id = headers.get("x-session-id")
-    print(session_id)
+    watch_session_id = headers.get("x-session-id")
+    print(watch_session_id)
     referer = headers.get("referer")
     data = payload.model_dump()
     # data["referer"] = referer
     obj = YouTubeWatchEvent(**data)
     obj.referer = referer
-    obj.watch_session_id = session_id
+    if watch_session_id:
+        watch_sesion_query = select(WatchSession).where(
+            WatchSession.watch_session_id == watch_session_id
+        )
+        watch_session_obj = db_session.exec(watch_sesion_query).first()
+        if watch_session_obj:
+            obj.watch_session_id = watch_session_id
+            watch_session_obj.last_active = get_utc_now()
+            db_session.add(watch_session_obj)
+
     db_session.add(obj)
     db_session.commit()
     db_session.refresh(obj)
