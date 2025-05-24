@@ -1,5 +1,8 @@
+from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Request, Depends
+from sqlalchemy import func
 from sqlmodel import Session, select
+from timescaledb.hyperfunctions import time_bucket
 from timescaledb.utils import get_utc_now
 from api.db.session import get_session
 from api.watch_sessions.models import WatchSession
@@ -43,3 +46,32 @@ def create_video_event(
     print(obj)
     # print(data, referer)
     return obj
+
+
+@router.get("/{video_id}")
+def get_video_stats(video_id: str, db_session: Session = Depends(get_session)):
+    bucket = time_bucket("30 minutes", YouTubeWatchEvent.time)
+    start = datetime.now(timezone.utc) - timedelta(hours=25)
+    end = datetime.now(timezone.utc) - timedelta(hours=1)
+    query = (
+        select(
+            bucket,
+            YouTubeWatchEvent.video_id
+        )
+        .where(YouTubeWatchEvent.time > start,
+            YouTubeWatchEvent.time <= end,
+            YouTubeWatchEvent.video_id == video_id
+        )
+        .group_by(bucket)
+        .order_by(bucket)
+    )
+    results = db_session.exec(query).fetchall()
+    print(results)
+    return results
+
+
+
+
+
+
+
