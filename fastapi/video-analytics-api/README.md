@@ -21,4 +21,6 @@ This project uses a Neon Postgres database.
    uvicorn src.main:app --reload
    ```
 
+## Features
 
+- Video statistics aggregations: The API provides endpoints to retrieve aggregated statistics for video watch sessions and events.
