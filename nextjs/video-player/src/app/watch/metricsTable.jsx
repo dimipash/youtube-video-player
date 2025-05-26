@@ -1,4 +1,5 @@
 "use client";
+import TimeBucketSelector from "@/components/TimeBucketSelector";
 import useWatchSession from "@/hooks/useWatchSession";
 import useSWR from "swr";
 
@@ -8,7 +9,11 @@ export default function MetricsTable({ videoId }) {
     if (!videoId) {
         return null;
     }
-    const url = `${FASTAPI_ENDPOINT}${videoId}`;
+    const [bucket, setBucket] = useState(1);
+    const [bucketUnit, setBucketUnit] = useState("weeks");
+    const timeBucket = `${bucket} ${bucketUnit}`
+
+    const url = `${FASTAPI_ENDPOINT}${videoId}?bucket=${timeBucket}`;
     const session_id = useWatchSession(videoId);
     const headers = {
         "Content-Type": "application/json",
@@ -25,6 +30,13 @@ export default function MetricsTable({ videoId }) {
 
     return (
         <div>
+            <TimeBucketSelector
+                bucket={bucket}
+                setBucket={setBucket}
+                bucketUnit={bucketUnit}
+                setBucketUnit={setBucketUnit}
+            />
+
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-gray-100">
                     <tr>
