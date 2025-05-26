@@ -48,7 +48,7 @@ class VideoStat(BaseModel):
     total_events: int
     max_viewership: Optional[float] = PydanticField(default=-1)
     avg_viewership: Optional[float] = PydanticField(default=-1)
-    unique_views = Optional[int] = PydanticField(default=-1)
+    unique_views: Optional[int] = PydanticField(default=1)
 
 
     
