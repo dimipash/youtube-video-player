@@ -51,6 +51,55 @@ def create_video_event(
     return obj
 
 
+@router.get("/top", response_model=List[VideoStat])
+def get_top_video_stats(request: Request, db_session: Session = Depends(get_session)):
+    params = request.query_params
+    bucket_param = params.get("bucket") or "1 day"
+    bucket = time_bucket(bucket_param, YouTubeWatchEvent.time)
+    hours_ago = parse_int_or_fallback(params.get("hours-ago"), fallback=24 * 31 * 3)
+    hours_until = parse_int_or_fallback(params.get("hours-until"), fallback=0)
+    start = datetime.now(timezone.utc) - timedelta(hours=hours_ago)
+    end = datetime.now(timezone.utc) - timedelta(hours=hours_until)
+    unique_views = (
+        func.count(func.distinct(YouTubeWatchEvent.watch_session_id)).label(
+            "unique_views"
+        ),
+    )
+    query = (
+        select(
+            bucket,
+            YouTubeWatchEvent.video_id,
+            func.count().label("total_events"),
+            func.max(YouTubeWatchEvent.current_time).label("max_viewership"),
+            func.avg(YouTubeWatchEvent.current_time).label("avg_viewership"),
+            unique_views,
+        )
+        .where(
+            YouTubeWatchEvent.time > start,
+            YouTubeWatchEvent.time <= end,
+            YouTubeWatchEvent.video_state_label != "CUED",
+        )
+        .group_by(bucket)
+        .order_by(bucket.desc(), unique_views.desc())
+    )
+    try:
+        results = db_session.exec(query).fetchall()
+    except:
+        raise HTTPException(status_code=400, detail="Invalid query parameters")
+    results = [
+        VideoStat(
+            time=x[0],
+            video_id=x[1],
+            total_events=x[2],
+            max_viewership=x[3],
+            avg_viewership=x[4],
+            unique_views=x[5],
+        )
+        for x in results
+    ]
+    return results
+
+
 @router.get("/{video_id}", response_model=List[VideoStat])
 def get_video_stats(
     video_id: str, request: Request, db_session: Session = Depends(get_session)
@@ -67,8 +116,12 @@ def get_video_stats(
             bucket,
             YouTubeWatchEvent.video_id,
             func.count().label("total_events"),
-            func.max(YouTubeWatchEvent.current_time).label("max_viewership"), # in seconds
-            func.avg(YouTubeWatchEvent.current_time).label("avg_viewership"), # in seconds
+            func.max(YouTubeWatchEvent.current_time).label(
+                "max_viewership"
+            ),  # in seconds
+            func.avg(YouTubeWatchEvent.current_time).label(
+                "avg_viewership"
+            ),  # in seconds
             func.count(func.distinct(YouTubeWatchEvent.watch_session_id)).label(
                 "unique_views"
             ),

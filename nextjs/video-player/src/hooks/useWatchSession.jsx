@@ -16,12 +16,12 @@ export default function useWatchSession(video_id) {
                 method: "POST",
                 headers: headers,
                 body: JSON.stringify({
-                    video_id: video_id,
+                    video_id: video_id ? video_id : "",
                 }),
             });
             if (!response.ok) {
                 console.log(await response.text());
-                console.log("Error adding data the backend");
+                console.log("Error with watch session");
             } else {
                 const responseData = await response.json();
                 sessionStorage.setItem(
